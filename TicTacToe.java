@@ -66,6 +66,11 @@ public class TicTacToe {
         return inBounds && cellEmpty;
     }
 
+    // Places the symbol on the board at the given position (state update)
+    static void placeSymbol(int row, int col, char symbol) {
+        board[row][col] = symbol;
+    }
+
     // Reads and returns a valid slot number (1–9) from the current player
     static int getPlayerInput() {
         System.out.print("Player " + currentPlayer + " (" +
@@ -86,9 +91,12 @@ public class TicTacToe {
         int   col     = indices[1];
 
         if (isValidMove(row, col)) {
-            System.out.println("Slot " + slot + " (row " + row + ", col " + col + ") - move accepted.");
+            char symbol = (currentPlayer == 1) ? player1Symbol : player2Symbol;
+            placeSymbol(row, col, symbol);
+            System.out.println("Board after Player " + currentPlayer + " placed " + symbol + " at slot " + slot + ":");
+            printBoard();
         } else {
-            System.out.println("Slot " + slot + " (row " + row + ", col " + col + ") - move rejected: out of bounds or cell already taken.");
+            System.out.println("Slot " + slot + " rejected: out of bounds or cell already taken.");
         }
     }
 }
