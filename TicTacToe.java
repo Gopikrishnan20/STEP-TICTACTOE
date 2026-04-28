@@ -59,6 +59,13 @@ public class TicTacToe {
         return new int[]{row, col};
     }
 
+    // Returns true only when row/col are within bounds AND the cell is not yet taken
+    static boolean isValidMove(int row, int col) {
+        boolean inBounds  = (row >= 0 && row <= 2) && (col >= 0 && col <= 2);
+        boolean cellEmpty = inBounds && board[row][col] == '-';
+        return inBounds && cellEmpty;
+    }
+
     // Reads and returns a valid slot number (1–9) from the current player
     static int getPlayerInput() {
         System.out.print("Player " + currentPlayer + " (" +
@@ -75,6 +82,13 @@ public class TicTacToe {
 
         int slot      = getPlayerInput();
         int[] indices = slotToIndices(slot);
-        System.out.println("Slot " + slot + " -> row " + indices[0] + ", col " + indices[1]);
+        int   row     = indices[0];
+        int   col     = indices[1];
+
+        if (isValidMove(row, col)) {
+            System.out.println("Slot " + slot + " (row " + row + ", col " + col + ") - move accepted.");
+        } else {
+            System.out.println("Slot " + slot + " (row " + row + ", col " + col + ") - move rejected: out of bounds or cell already taken.");
+        }
     }
 }
