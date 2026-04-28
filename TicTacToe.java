@@ -1,8 +1,10 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class TicTacToe {
 
-    static char[][] board = new char[3][3];
+    static char[][]  board = new char[3][3];
+    static Scanner   scanner = new Scanner(System.in);
 
     // Game state variables
     static int    currentPlayer;   // 1 or 2
@@ -48,9 +50,21 @@ public class TicTacToe {
         System.out.println();
     }
 
+    // Reads and returns a valid slot number (1–9) from the current player
+    static int getPlayerInput() {
+        System.out.print("Player " + currentPlayer + " (" +
+                (currentPlayer == 1 ? player1Symbol : player2Symbol) +
+                ") - enter slot (1-9): ");
+        int slot = scanner.nextInt();
+        return slot;
+    }
+
     public static void main(String[] args) {
         initBoard();
         toss();
         printBoard();
+
+        int slot = getPlayerInput();
+        System.out.println("Player " + currentPlayer + " chose slot " + slot + ".");
     }
 }
