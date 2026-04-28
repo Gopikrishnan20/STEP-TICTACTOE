@@ -71,6 +71,20 @@ public class TicTacToe {
         board[row][col] = symbol;
     }
 
+    // Returns true if the given symbol owns an entire row, column, or diagonal
+    static boolean checkWin(char symbol) {
+        // rows and columns
+        for (int i = 0; i < 3; i++) {
+            if (board[i][0] == symbol && board[i][1] == symbol && board[i][2] == symbol) return true;
+            if (board[0][i] == symbol && board[1][i] == symbol && board[2][i] == symbol) return true;
+        }
+        // diagonals
+        if (board[0][0] == symbol && board[1][1] == symbol && board[2][2] == symbol) return true;
+        if (board[0][2] == symbol && board[1][1] == symbol && board[2][0] == symbol) return true;
+
+        return false;
+    }
+
     // Keeps picking a random slot (1-9) until it lands on an empty cell, then places the symbol
     static void computerMove() {
         Random random = new Random();
@@ -114,6 +128,10 @@ public class TicTacToe {
             placeSymbol(row, col, symbol);
             System.out.println("Board after Player " + currentPlayer + " placed " + symbol + " at slot " + slot + ":");
             printBoard();
+            if (checkWin(symbol)) {
+                System.out.println("Player " + currentPlayer + " wins!");
+                return;
+            }
         } else {
             System.out.println("Slot " + slot + " rejected: out of bounds or cell already taken.");
             return;
@@ -123,5 +141,9 @@ public class TicTacToe {
         currentPlayer = (currentPlayer == 1) ? 2 : 1;
         System.out.println();
         computerMove();
+        char compSymbol = (currentPlayer == 1) ? player1Symbol : player2Symbol;
+        if (checkWin(compSymbol)) {
+            System.out.println("Player " + currentPlayer + " (computer) wins!");
+        }
     }
 }
