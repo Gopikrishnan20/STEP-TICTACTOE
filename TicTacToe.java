@@ -104,6 +104,14 @@ public class TicTacToe {
         printBoard();
     }
 
+    // Returns true when every cell is filled (no '-' remains)
+    static boolean checkDraw() {
+        for (int row = 0; row < 3; row++)
+            for (int col = 0; col < 3; col++)
+                if (board[row][col] == '-') return false;
+        return true;
+    }
+
     // Reads and returns a valid slot number (1–9) from the current player
     static int getPlayerInput() {
         System.out.print("Player " + currentPlayer + " (" +
@@ -118,32 +126,53 @@ public class TicTacToe {
         toss();
         printBoard();
 
-        int slot      = getPlayerInput();
-        int[] indices = slotToIndices(slot);
-        int   row     = indices[0];
-        int   col     = indices[1];
+        // Game state flags
+        boolean gameOver = false;
+        boolean humanIsPlayer1 = true;   // Player 1 = human, Player 2 = computer
 
-        if (isValidMove(row, col)) {
+        while (!gameOver) {
             char symbol = (currentPlayer == 1) ? player1Symbol : player2Symbol;
-            placeSymbol(row, col, symbol);
-            System.out.println("Board after Player " + currentPlayer + " placed " + symbol + " at slot " + slot + ":");
-            printBoard();
-            if (checkWin(symbol)) {
-                System.out.println("Player " + currentPlayer + " wins!");
-                return;
-            }
-        } else {
-            System.out.println("Slot " + slot + " rejected: out of bounds or cell already taken.");
-            return;
-        }
 
-        // Switch to the other player and let the computer take a turn
-        currentPlayer = (currentPlayer == 1) ? 2 : 1;
-        System.out.println();
-        computerMove();
-        char compSymbol = (currentPlayer == 1) ? player1Symbol : player2Symbol;
-        if (checkWin(compSymbol)) {
-            System.out.println("Player " + currentPlayer + " (computer) wins!");
+            if (currentPlayer == 1) {
+                // --- Human turn ---
+                int slot = getPlayerInput();
+                int[] indices = slotToIndices(slot);
+                int row = indices[0];
+                int col = indices[1];
+
+                if (!isValidMove(row, col)) {
+                    System.out.println("Invalid move. Try again.");
+                    continue;   // re-prompt without switching turn
+                }
+
+                placeSymbol(row, col, symbol);
+                printBoard();
+
+            } else {
+                // --- Computer turn ---
+                System.out.println("Computer is thinking...");
+                computerMove();
+            }
+
+            // Check win
+            if (checkWin(symbol)) {
+                if (currentPlayer == 1)
+                    System.out.println("You win! Congratulations!");
+                else
+                    System.out.println("Computer wins! Better luck next time.");
+                gameOver = true;
+                continue;
+            }
+
+            // Check draw
+            if (checkDraw()) {
+                System.out.println("It's a draw!");
+                gameOver = true;
+                continue;
+            }
+
+            // Switch turn
+            currentPlayer = (currentPlayer == 1) ? 2 : 1;
         }
     }
 }
