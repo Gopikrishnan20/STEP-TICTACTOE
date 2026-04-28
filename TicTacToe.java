@@ -71,6 +71,25 @@ public class TicTacToe {
         board[row][col] = symbol;
     }
 
+    // Keeps picking a random slot (1-9) until it lands on an empty cell, then places the symbol
+    static void computerMove() {
+        Random random = new Random();
+        int row, col;
+
+        do {
+            int slot  = random.nextInt(9) + 1;   // 1–9
+            int[] idx = slotToIndices(slot);
+            row = idx[0];
+            col = idx[1];
+        } while (!isValidMove(row, col));
+
+        char symbol = (currentPlayer == 1) ? player1Symbol : player2Symbol;
+        placeSymbol(row, col, symbol);
+        System.out.println("Computer (Player " + currentPlayer + ") placed " + symbol +
+                " at row " + row + ", col " + col + ":");
+        printBoard();
+    }
+
     // Reads and returns a valid slot number (1–9) from the current player
     static int getPlayerInput() {
         System.out.print("Player " + currentPlayer + " (" +
@@ -97,6 +116,12 @@ public class TicTacToe {
             printBoard();
         } else {
             System.out.println("Slot " + slot + " rejected: out of bounds or cell already taken.");
+            return;
         }
+
+        // Switch to the other player and let the computer take a turn
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+        System.out.println();
+        computerMove();
     }
 }
