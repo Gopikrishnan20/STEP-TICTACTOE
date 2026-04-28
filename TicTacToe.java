@@ -50,6 +50,15 @@ public class TicTacToe {
         System.out.println();
     }
 
+    // Converts slot (1-9) to a row/col pair using zero-based indexing
+    // index = slot - 1  →  row = index / 3  ,  col = index % 3
+    static int[] slotToIndices(int slot) {
+        int index = slot - 1;
+        int row   = index / 3;
+        int col   = index % 3;
+        return new int[]{row, col};
+    }
+
     // Reads and returns a valid slot number (1–9) from the current player
     static int getPlayerInput() {
         System.out.print("Player " + currentPlayer + " (" +
@@ -64,7 +73,8 @@ public class TicTacToe {
         toss();
         printBoard();
 
-        int slot = getPlayerInput();
-        System.out.println("Player " + currentPlayer + " chose slot " + slot + ".");
+        int slot      = getPlayerInput();
+        int[] indices = slotToIndices(slot);
+        System.out.println("Slot " + slot + " -> row " + indices[0] + ", col " + indices[1]);
     }
 }
